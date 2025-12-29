@@ -20,10 +20,10 @@
 | 🦅 | Spur | Attack | Low damage physical attack, always used with the other basic attack (??) |  |
 | 🦅🦊 | Dexterous | Buff | -AttackPenalty% / -CooldownReduction% |  |
 | 🦅🐘 | Revenge | Buff | Stacking damage bonus when damaged, up to 3-5[^3] stacks for 5s |  |
-| 🦅🐭 | Legs | Evolution | +Speed% | Arthropod, Bipedal |
+| 🦅🐭 | Legs | Branching | +Speed% | Arthropod, Bipedal |
 | 🦅🐭 | More Legs | Buff | +Speed% |  |
 | 🦅🐭 | Saliva | Buff | +FoodProgress% / +HealthRegen |  |
-| 🦅🐭 | Wings | Evolution | -TerrainPenalty% |  |
+| 🦅🐭 | Wings | Branching | -TerrainPenalty% |  |
 | 🐭 | Elusive | Buff | -Size% / +Dodge% |  |
 | 🐭 | Forager | Buff | Increases how often food becomes health food |  |
 | 🐭 | Fungoid | Buff | Periodically drops food every (13-17s - 4-11s)[^4] |  |
@@ -31,7 +31,7 @@
 | 🐭 | Hollow Bones | Buff | +Speed% / -DamageResist% |  |
 | 🐭 | Nomadic | Buff | Gain progress for each point of interest |  |
 | 🐭 | Prehensile Tail | Buff | +FeedingDistance | Arboreal, Thrower |
-| 🐭 | Ruminant | Evolution | Periodically gain progress based on prey affinity level, 10s CD resets when hit |  |
+| 🐭 | Ruminant | Branching | Periodically gain progress based on prey affinity level, 10s CD resets when hit |  |
 | 🐭 | Slow Metabolism | Buff | -Speed% / -ProgressToEvolve% |  |
 | 🐭 | Smol | Buff | -Size% / +Speed% |  |
 | 🐭🐝 | Carrion | Buff | More Progress% for food killed by others |  |
@@ -45,21 +45,21 @@
 | 🐭🦊 | Shifty | Buff | Dodge% based on size modifier (only <100%) |  |
 | 🐭🦊 | Slide | Dodge | Replaces dodge with a long dodge |  |
 | 🦊 | Agile | Buff | -MovementAttackPenalty% / +Dodge% |  |
-| 🦊 | Arms | Evolution | +FeedingDistance / +AbilityDamage |  |
+| 🦊 | Arms | Branching | +FeedingDistance / +AbilityDamage |  |
 | 🦊 | Constriction | Special | Stuns the target and deals physical damage over time (12s) |  |
 | 🦊 | Cortex | Buff | +Ability |  |
-| 🦊 | Leech | Attack | Physical attack that steals health (1.5s) |  |
+| 🦊 | Leech | Attack | Ability attack that steals health (1.5s) |  |
 | 🦊🦀 | Pincer | Attack | Ability attack that deals damage with both pincers (0.8s) |  |
 | 🦊🦀 | Pistol Pincer | Special | Special move that deals highest of physical or ability with pushback (10s) |  |
 | 🦊 | Poisonous Saliva | Buff | Jaws, beak, and spit apply poison damage |  |
 | 🦊 | Poisonous Spores | Buff | Poison damage to nearby enemies when damaged |  |
 | 🦊 | Reach | Buff | +AttackArea% |  |
-| 🦊 | Slithery | Evolution | +Speed% / -TerrainMovementPenalty% |  |
+| 🦊 | Slithery | Branching | +Speed% / -TerrainMovementPenalty% |  |
 | 🦊 | Spit | Attack | Ability ranged attack (1.5s) |  |
 | 🦊 | Stinger | Attack | Ability attack that poisons the enemy over 5s (2-1.5s) |  |
 | 🦊 | Stoner | Attack | Attack that deals the lowest of physical or ability, requires stones ammo, targeted (0.5s) |  |
 | 🦊 | Synapse | Buff | -CooldownReduction% |  |
-| 🦊 | Tentacles | Evolution | +Ability / +Speed |  |
+| 🦊 | Tentacles | Branching | +Ability / +Speed |  |
 | 🦊🐝 | Cheek Pouch | Buff | Stores stacks of food to eat while moving | Provider, Storage |
 | 🐘 | Antlers | Attack | Physical attack that partially damages the player (1.25s) |  |
 | 🐘 | Body Slam | Attack | Physical attack that scales off of player health (1.25s) |  |
