@@ -56,7 +56,7 @@
 | 🦊 | Reach | Buff | +AttackArea% |  |
 | 🦊 | Slithery | Branching | +Speed% / -TerrainMovementPenalty% |  |
 | 🦊 | Spit | Attack | Ability ranged attack (1.5s) |  |
-| 🦊 | Stinger | Attack | Ability attack that poisons the enemy over 5s (2-1.5s) |  |
+| 🦊 | Stinger | Attack | Physical attack that poisons (ability) the enemy over 5s (2-1.5s) |  |
 | 🦊 | Stoner | Attack | Attack that deals the lowest of physical or ability, requires stones ammo, targeted (0.5s) |  |
 | 🦊 | Synapse | Buff | -CooldownReduction% |  |
 | 🦊 | Tentacles | Branching | +Ability / +Speed |  |
