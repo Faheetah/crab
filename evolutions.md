@@ -1,6 +1,6 @@
 # Quick reference for affinities
 
-| 🌿&#8209;[^1]  | Name                | Type      | Description (cooldown[^2])                                                                 | Subspec               | Unlocks | Blocks |
+| 🌿&#8209;&#8209;[^1]  | Name                | Type      | Description (cooldown[^2])                                                                 | Subspec               | Unlocks | Blocks |
 | -------------- | ------------------- | --------- | ------------------------------------------------------------------------------------------ | --------------------- | ------- | ------ |
 | 🌿             | Diurnal             | Buff      | +DayDamage% / -NightDamage%                                                                |                       |  | Nocturnal |
 | 🌿             | Fur                 | Buff      | +DamageResist% / +ColdResist%                                                              | Snow Dive, Wool       |  | Scales, Exoskeleton |
