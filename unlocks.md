@@ -13,8 +13,11 @@ Arms-- Arms 1 ---Stoner
 
 Tail-- Tail 1 ---PrehensileTail
 Tail-- Tail 1 ---TailWag
-Tail-- Tail 2 ---C0nstriction
 Tail-- Tail 3 ---DetachableTail
+Tail-- Tail 2 ---Constriction
+
+Slithery-- Slithery 1 ---Constriction
+Slithery-- Slithery 1 ---Dive
 
 Pincers-- Pincers 1 ---PistolPincer
 
@@ -37,8 +40,6 @@ Beak-- Beak 1 ---PoisonousSaliva
 Spit-- Spit 1 ---PoisonousSaliva
 
 Carapace-- Carapace 1 ---TurtleDown
-Slithery-- Slithery 1 ---Constriction
-Slithery-- Slithery 1 ---Dive
 Alpha-- Alpha 1 ---Pack
 
 Cortex-- Cortex 3 ---Synapse
