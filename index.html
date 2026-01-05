@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body {
+                background-color: #171717;
+                color: #EEEEEE;
+                padding: 8px;
+                padding-left: 32px;
+                font-family: sans-serif;
+            }
+
+            .ignore-pointer {
+                pointer-events: none;
+            }
+
+            .container {
+                display: flex;
+            }
+
+            .container > div {
+                flex-basis: 50%
+            }
+
+            .skillTile {
+                pointer-events: auto;
+                background-color: #222222;
+                width: 100px;
+                height: 100px;
+                margin: 4px;
+                display: inline-block;
+                position: relative;
+            }
+
+            .skillTile:hover {
+                background-color: #333333;
+            }
+
+            .skillTile[branching="true"] {
+                border: 2px solid #FF3333 !important;
+            }
+
+            .skillTile[rarity="0"] {
+                border: 2px solid #33FF33;
+            }
+
+            .skillTile[rarity="1"] {
+                border: 2px solid #3399FF;
+            }
+
+            .skillTile[rarity="2"] {
+                border: 2px solid #FF33FF;
+            }
+
+            .skillTile[rarity="3"] {
+                border: 2px solid #FFFF33;
+            }
+
+            .level {
+                pointer-events: none;
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                font-size: 10pt;
+                filter: drop-shadow(2px 2px 0px #000000);
+            }
+
+            .name {
+                position: absolute;
+                top: 38px;
+                left: 8px;
+                font-size: 11pt;
+                filter: drop-shadow(2px 2px 0px #000000);
+            }
+
+            a {
+                color: #3399FF;
+            }
+        </style>
+
+        <script type="text/javascript">
+            let skills = {
+                "agile": {minRarity: 0, maxLevel: 5, stats: [{attackmovementpenalty: [10,20,30,40,50], dodge: [5,10,15,20,25]}, {attackmovementpenalty: [12,25,37,50,62], dodge: [6,12,18,25,32]}, {attackmovementpenalty: [14,30,45,60,75], dodge: [7,15,22,30,38]}, {attackmovementpenalty: [17,35,52,70,90], dodge: [6,17,26,35,45]}]},
+                "alpha": {minRarity: 1, maxLevel: 3, stats: [{social: [1,2,3], size: [7,15,23]}, {social: [1.2,2.5,3.8], size: [8,16,25]}, {social: [1.5,3,4.5], size: [10,20,30]}]},
+                "antennae": {minRarity: 1, maxLevel: 5, stats: [{social: [1.5,3,4.5,6,7.5], senses: [15,30,45,60,75]}, {social: [1.7,3.5,5.2,7,8.7], senses: [18,36,55,73,90]}, {social: [2,4,6,8,10], senses: [23,45,68,90,110]}]},
+                "arms": {minRarity: 3, maxLevel: 3, branching: true, stats: [{feedingdistance: [2,4,6], ability: [2.5,5,7.5]}]},
+                "carapace": {minRarity: 0, maxLevel: 3, stats: [{damageresistance: [5,10,15], plating: [3,6,9]}, {damageresistance: [6,12,18], plating: [3,7,11]}, {damageresistance: [7,15,22], plating: [4,8,12]}, {damageresistance: [8,17,26], plating: [5,10,15]}]},
+                "carnivore": {minRarity: 1, maxLevel: 5, stats: [
+                        {meatfeedingprogress: [30,60,90,120,150], meatcarrionfeedingprogress: [30,60,90,120,150]},
+                        {meatfeedingprogress: [35,70,105,140,175], meatcarrionfeedingprogress: [30,60,90,120,150]},
+                        {meatfeedingprogress: [40,80,120,160,200], meatcarrionfeedingprogress: [40,80,120,160,200]},
+                    ]},
+                "carrion": {minRarity: 1, maxLevel: 5, stats: [
+                        {fishcarrionfeedingprogress: [50,100,150,200,250], meatcarrionfeedingprogress: [50,100,150,200,250]},
+                        {fishcarrionfeedingprogress: [66,133,200,250,325], meatcarrionfeedingprogress: [66,133,200,250,325]}, // not sure on last 2 levels
+                        {fishcarrionfeedingprogress: [75,150,225,300,375], meatcarrionfeedingprogress: [75,150,225,300,375]},
+                    ]},
+                "chonky": {minRarity: 0, maxLevel: 3, stats: [
+                        {size: [10,20,30], physical: [1,2,3]},
+                        {size: [12,25,37], physical: [1.2,2.5,3.7]},
+                        {size: [14,30,45], physical: [1.4,3,4.5]},
+                        {size: [17,35,52], physical: [1.7,3.5,5.2]}
+                    ]},
+                "cheek pouch": {minRarity: 1, maxLevel: 3, stats: [{feedingdistance: [1,2,3]}, {feedingdistance: [2,3,4]}, {feedingdistance: [3,4,5]}]},
+                "cortex": {minRarity: 0, maxLevel: 5, stats: [{ability: [2,4,6,8,10]}, {ability: [2.3,4.5,7,9.5,11.5]}, {ability: [2.7,5.5,8,11,13.5]}, {ability: [3.3,6.6,10,13,16]}]},
+                "dexterous": {minRarity: 0, maxLevel: 5, stats: [
+                    {attackmovementpenalty: [10,20,30,40,50], cooldowns: [5,10,15,20,25]},
+                    {attackmovementpenalty: [12,24,35,50,65], cooldowns: [6,12,18,25,32]},
+                    {attackmovementpenalty: [14,30,45,60,75], cooldowns: [7,15,22,30,38]}, // not sure on attackmovementpenalty
+                    {attackmovementpenalty: [17,35,52,70,90], cooldowns: [8,17,26,35,45]},
+                ]},
+                "elusive": {minRarity: 0, maxLevel: 3, stats: [
+                    {size: [-10,-20,-30], dodge: [8,16,25]},
+                    {size: [-12,-25,-37], dodge: [9,18,28]},
+                    {size: [-14,-30,-45], dodge: [10,20,30]},
+                    {size: [-17,-35,-52], dodge: [12,24,35]},
+                ]},
+                "exoskeleton": {minRarity: 1, maxLevel: 3, stats: [
+                    {damageresistance: [8,16,24], social: [1.7,3.5,5.2]},
+                    {damageresistance: [9,18,27], social: [2,4,6]},
+                    {damageresistance: [10,20,30], social: [2.3,4.5,6.7]},
+                ]},
+                "fur": {minRarity: 0, maxLevel: 3, stats: [
+                    {damageresistance: [5,10,15], coldresistance: [33,66,100]},
+                    {damageresistance: [6,12,18], coldresistance: [33,66,100]},
+                    {damageresistance: [7,15,22], coldresistance: [40,80,120]},
+                    {damageresistance: [8,17,26], coldresistance: [50,100,150]},
+                ]},
+                "herbivore": {minRarity: 1, maxLevel: 5, stats: [
+                    {vegfeedingprogress: [40,80,120,160,200]},
+                    {vegfeedingprogress: [50,100,150,200,250]},
+                    {vegfeedingprogress: [60,120,180,240,300]}
+                ]},
+                "hollow bones": {minRarity: 2, maxLevel: 5, stats: [
+                    {speed: [0.25,0.5,0.75,1,1.25], damageresistance: [-5,-10,-15,-20,-25]},
+                    {speed: [0.3,0.6,0.9,1.2,1.5], damageresistance: [-4,-8,-12,-16,-20]},
+                ]},
+                "legs": {minRarity: 3, maxLevel: 3, branching: true, stats: [{speed: [1.25,2.25,3]}]},
+                "more eyes": {minRarity: 0, maxLevel: 5, stats: [
+                    {dodge: [5,10,15,20,25], senses: [15,30,45,60,75]},
+                    {dodge: [6,12,18,25,32], senses: [17,35,52,70,85]},
+                    {dodge: [7,15,22,30,38], senses: [20,40,60,80,100]},
+                    {dodge: [8,17,26,35,45], senses: [23,45,70,95,120]},
+                ]},
+                "more legs": {minRarity: 2, maxLevel: 2, stats: [{speed: [0.5,1]}, {speed: [0.6,1.2]}]},
+                "more mass": {minRarity: 0, maxLevel: 3, stats: [{physical: [1,2,3], size: [7,15,22], hp: [10,20,30]}, {physical: [1.2,2.5,3.7], size: [8,17,25], hp: [12,25,37]}, {physical: [1.4,3,4.5], size: [9,20,30], hp: [14,30,45]}, {physical: [1.7,3.5,5.2], size: [10,22,35], hp: [16,35,52]}]},
+                "muscular tissue": {minRarity: 0, maxLevel: 5, stats: [{physical: [2,4,6,8,10]}, {physical: [2.3,4.5,7,9.5,11]}, {physical: [2.7,5.5,8,11,13.5]}, {physical: [3.3,6.6,10,13,16]}]},
+                "omnivore": {minRarity: 1, maxLevel: 3, stats: [
+                    {
+                        feedingprogress: [40,80,120],
+                        carrionfeedingprogress: [40,80,120],
+                        meatfeedingprogress: [40,80,120],
+                        meatcarrionfeedingprogress: [40,80,120],
+                        fishfeedingprogress: [40,80,120],
+                        fishcarrionfeedingprogress: [40,80,120],
+                        vegfeedingprogress: [40,80,120]
+                    },
+                    {
+                        feedingprogress: [50,100,150],
+                        carrionfeedingprogress: [50,100,150],
+                        meatfeedingprogress: [50,100,150],
+                        meatcarrionfeedingprogress: [50,100,150],
+                        fishfeedingprogress: [50,100,150],
+                        fishcarrionfeedingprogress: [50,100,150],
+                        vegfeedingprogress: [50,100,150]
+                    },
+                    {
+                        feedingprogress: [60,120,180],
+                        carrionfeedingprogress: [60,120,180],
+                        meatfeedingprogress: [60,120,180],
+                        meatcarrionfeedingprogress: [60,120,180],
+                        fishfeedingprogress: [60,120,180],
+                        fishcarrionfeedingprogress: [60,120,180],
+                        vegfeedingprogress: [60,120,180]
+                    },
+                ]},
+                "piscivore": {minRarity: 1, maxLevel: 5, stats: [
+                    {fishfeedingprogress: [40,80,120,160,200], fishcarrionfeedingprogress: [40,80,120,160,200]},
+                    {fishfeedingprogress: [50,100,150,200,250], fishcarrionfeedingprogress: [50,100,150,200,250]},
+                    {fishfeedingprogress: [60,120,180,240,300], fishcarrionfeedingprogress: [60,120,180,240,300]},
+                ]},
+                "plated": {minRarity: 0, maxLevel: 5, stats: [
+                    {plating: [4,8,12,16,20]},
+                    {plating: [5,10,15,20,25]},
+                    {plating: [6,12,18,24,30]},
+                    {plating: [7,14,21,28,35]},
+                ]},
+                "prehensile tail": {minRarity: 1, maxLevel: 3, stats: [{feedingdistance: [2,4,6]}, {feedingdistance: [2.5,5,7.5]}, {feedingdistance: [3,6,9]}]},
+                "reach": {minRarity: 0, maxLevel: 3, stats: [{attackarea: [15,30,45]}, {attackarea: [17,35,52]}, {attackarea: [20,40,60]}, {attackarea: [23,45,70]}]},
+                "regenerative tissue": {minRarity: 0, maxLevel: 5, stats: [
+                    {regeneration: [2,4,6,8,10]},
+                    {regeneration: [2.3,4.5,7,9.5,11.5]},
+                    {regeneration: [2.7,5.5,8,11,13.5]},
+                    {regeneration: [3.3,6.6,10,13,16]},
+                ]},
+                "saliva": {minRarity: 0, maxLevel: 5, stats: [
+                    {feedingspeed: [15,30,45,60,75], regeneration: [1,2,3,4,5]},
+                    {feedingspeed: [17,35,52,70,85], regeneration: [1.2,2.5,3.7,5,6.2]},
+                    {feedingspeed: [20,40,60,80,100], regeneration: [1.4,3,4.5,6,7.5]},
+                    {feedingspeed: [23,45,70,95,120], regeneration: [1.7,3.5,5.2,7,9]},
+                ]},
+                "scales": {minRarity: 0, maxLevel: 3, stats: [
+                    {damageresistance: [5,10,15], heatresistance: [33,66,100]},
+                    {damageresistance: [6,12,18], heatresistance: [33,66,100]},
+                    {damageresistance: [7,15,22], heatresistance: [40,80,120]},
+                    {damageresistance: [8,17,26], heatresistance: [50,100,150]},
+                ]},
+                "shell": {minRarity: 1, maxLevel: 3, stats: [
+                    {damageresistance: [10,20,30]},
+                    {damageresistance: [12,25,37]},
+                    {damageresistance: [15,30,45]},
+                ]},
+                "slithery": {minRarity: 3, maxLevel: 3, branching: true, stats: [{speed: [1,1.75,2.5], terrainpenaltyred: [20,35,50]}]},
+                "smol": {minRarity: 1, maxLevel: 5, stats: [
+                    {size: [-10,-20,-30,-40,-50], speed: [0.1,0.2,0.3,0.4,0.5]},
+                    {size: [-11,-22,-33,-44,-55], speed: [0.12,0.25,0.38,0.5,0.62]},
+                    {size: [-13,-25,-37,-50,-62], speed: [0.15,0.3,0.45,0.6,0.75]},
+                ]},
+                "stomach": {minRarity: 0, maxLevel: 5, stats: [
+                    {feedingspeed: [25,50,75,100,125]},
+                    {feedingspeed: [28,55,85,112,140]},
+                    {feedingspeed: [33,66,100,133,166]},
+                    {feedingspeed: [40,80,120,160,200]},
+                ]},
+                "subcutaneous fat": {minRarity: 1, maxLevel: 3, stats: [
+                    {hp: [10,20,30], heatresistance: [15,30,45], coldresistance: [15,30,45]},
+                    {hp: [12,24,36], heatresistance: [18,36,55], coldresistance: [18,36,55]},
+                    {hp: [16,32,48], heatresistance: [23,45,68], coldresistance: [23,45,68]},
+                ]},
+                "synapse": {minRarity: 1, maxLevel: 3, stats: [
+                    {cooldowns: [10,20,30]},
+                    {cooldowns: [12,25,38]},
+                    {cooldowns: [15,30,45]},
+                ]},
+                "tail": {minRarity: 0, maxLevel: 5, stats: [
+                    {social: [1.5,3,4.5,6,7.5], ability: [1,2,3,4,5]},
+                    {social: [1.7,3.5,5.2,7,8.7], ability: [1.2,2.5,3.7,5,6.2]},
+                    {social: [2,4,6,8,10], ability: [1.4,3,4.5,6,7.5]},
+                    {social: [2.3,4.5,6.7,9,11.2], ability: [1.7,3.5,5.2,7,9]},
+                ]},
+                "tentacles": {minRarity: 3, maxLevel: 5, branching: true, stats: [{speed: [0.75,1.25,1.75,2.25,2.75], ability: [2,4,6,8,10]}]},
+                "vegan": {minRarity: 2, maxLevel: 3, stats: [{vegfeedingprogress: [75,150,225]}, {vegfeedingprogress: [100,200,300]}]},
+                "wings": {minRarity: 3, maxLevel: 1, branching: true, stats: [{terrainpenaltyred: [80]}]},
+            }
+
+            let decrementStats = function(e) {
+                e.preventDefault()
+                let skill = skills[e.srcElement.id]
+                let levelElem = e.srcElement.querySelector("span.level")
+                let level = parseInt(levelElem.getAttribute("level"))
+
+                let rarity = parseInt(e.srcElement.getAttribute("rarity"))
+
+                if (e.shiftKey) {
+                    if (rarity > skill.minRarity) {
+                        e.srcElement.setAttribute("rarity", rarity - 1)
+                        if (level > 0) {
+                            Object.entries(skill.stats[rarity - 1 - skill.minRarity]).forEach(item => {
+                                changeStat(item[0], item[1][level - 1] - skill.stats[rarity - skill.minRarity][item[0]][level - 1])
+                            })
+                        }
+                    }
+                } else {
+                    if (level > 0) {
+                        levelElem.setAttribute("level", level - 1)
+                        levelElem.textContent = "⭐".repeat(level - 1)
+                        Object.entries(skill.stats[rarity - skill.minRarity]).forEach(item => {
+                            changeStat(item[0], (item[1][level - 1] - (item[1][level - 2] || 0)) * -1)
+                        })
+                    }
+                }
+            }
+
+            let incrementStats = function(e) {
+                let skill = skills[e.srcElement.id]
+                let levelElem = e.srcElement.querySelector("span.level")
+                let level = parseInt(levelElem.getAttribute("level"))
+                let rarity = parseInt(e.srcElement.getAttribute("rarity"))
+
+                if (e.shiftKey) {
+                    if (rarity < 3) {
+                        e.srcElement.setAttribute("rarity", rarity + 1)
+                        if (level > 0) {
+                            Object.entries(skill.stats[rarity + 1 - skill.minRarity]).forEach(item => {
+                                changeStat(item[0], item[1][level - 1] - skill.stats[rarity - skill.minRarity][item[0]][level - 1])
+                            })
+                        }
+                    }
+                } else {
+                    if (level < skill.maxLevel) {
+                        levelElem.setAttribute("level", level + 1)
+                        levelElem.textContent = "⭐".repeat(level + 1)
+                        Object.entries(skill.stats[rarity - skill.minRarity]).forEach(item => {
+                            changeStat(item[0], item[1][level] - (item[1][level-1] || 0))
+                        })
+                    }
+                }
+            }
+
+            let changeStat = function(stat, value) {
+                elem = document.getElementById(stat)
+                elem.setAttribute("value", parseFloat(elem.getAttribute("value")) + value)
+                elem.querySelector("span.value").textContent = Math.floor(elem.getAttribute("value") * 10) / 10
+
+                if (parseFloat(elem.getAttribute("value")) < parseFloat(elem.getAttribute("default"))) {
+                    elem.querySelector("span.value").style.color = "#FF0000"
+                }
+
+                if (parseFloat(elem.getAttribute("value")) > parseFloat(elem.getAttribute("default"))) {
+                    elem.querySelector("span.value").style.color = "#00FF00"
+                }
+
+                if (parseFloat(elem.getAttribute("value")) == parseFloat(elem.getAttribute("default"))) {
+                    elem.querySelector("span.value").style.color = "#EEEEEE"
+                }
+            }
+
+            document.addEventListener("DOMContentLoaded", function(event) {
+                let skillsTiles = document.getElementById("skillsTiles");
+
+                Object.entries(skills).forEach(item => {
+                    node = document.createElement("div")
+
+                    node.setAttribute("class", "skillTile")
+                    node.setAttribute("id", item[0])
+                    node.setAttribute("rarity", item[1].minRarity)
+                    node.setAttribute("branching", item[1].branching || "false")
+
+                    levelNode = document.createElement("span")
+                    levelNode.setAttribute("class", "level")
+                    levelNode.setAttribute("level", 0)
+                    node.appendChild(levelNode)
+
+                    nameNode = document.createElement("span")
+                    nameNode.setAttribute("class", "name ignore-pointer")
+                    nameNode.textContent = item[0]
+                    node.appendChild(nameNode)
+
+                    node.addEventListener("click", incrementStats)
+                    node.addEventListener("contextmenu", decrementStats)
+
+                    skillsTiles.appendChild(node)
+                })
+            })
+        </script>
+    </head>
+    <body>
+        <h1><a href="https://store.steampowered.com/app/3526710/Everything_is_Crab_The_Animal_Evolution_Roguelite/">Everything Is Crab</a></h1>
+        <div>Click on a skill to increase it, right click to decrease, hold shift and click to increase/decrease rarity</div>
+        <div class="container">
+            <div id="skillsTiles"></div>
+            <div id="stats" class="container">
+                <div>
+                    <h2>Main Stats</h2>
+                    <div id="physical" default="10" value="10">Physical <span class="value">10</span></div>
+                    <div id="ability" default="10" value="10">Ability <span class="value">10</span></div>
+                    <div id="hp" default="50" value="50">Max HP <span class="value">50</span></div>
+                    <div id="social" default="10" value="10">Social <span class="value">10</span></div>
+                    <div id="speed" default="5" value="5">Speed <span class="value">5</span></div>
+
+                    <h2>Offense</h2>
+                    <div id="attackarea" default="100" value="100">Attack Area <span class="value">100</span>%</div>
+                    <div id="attackmovementpenalty" default="100" value="100">Attack Movement Penalty <span class="value">100</span>%</div>
+                    <div id="cooldowns" default="100" value="100">Cooldowns <span class="value">100</span>%</div>
+                    <div id="size" default="100" value="100">Size <span class="value">100</span>% (min 40%)</div>
+
+                    <h2>Survivability</h2>
+                    <div id="regeneration" default="0" value="0">Regeneration <span class="value">0</span></div>
+                    <div id="plating" default="0" value="0">Plating <span class="value">0</span></div>
+                    <div id="damageresistance" default="0" value="0">Damage Resistance <span class="value">0</span>%</div>
+                    <div id="dodge" default="0" value="0">Dodge <span class="value">0</span>% (max 75%)</div>
+                    <div id="heatresistance" default="0" value="0">Heat Resistance <span class="value">0</span>%</div>
+                    <div id="coldresistance" default="0" value="0">Cold Resistance <span class="value">0</span>%</div>
+                </div>
+
+                <div>
+                    <h2>Feeding</h2>
+                    <div id="feedingprogress" default="100" value="100">Feeding Progress <span class="value">100</span>%</div>
+                    <div id="carrionfeedingprogress" default="100" value="100">- Carrion Feeding Progress <span class="value">100</span>%</div>
+                    <div id="meatfeedingprogress" default="100" value="100">- Meat Feeding Progress <span class="value">100</span>%</div>
+                    <div id="meatcarrionfeedingprogress" default="100" value="100">- Meat Carrion Feeding Progress <span class="value">100</span>%</div>
+                    <div id="fishfeedingprogress" default="100" value="100">- Fish Feeding Progress <span class="value">100</span>%</div>
+                    <div id="fishcarrionfeedingprogress" default="100" value="100">- Fish Carrion Feeding Progress <span class="value">100</span>%</div>
+                    <div id="vegfeedingprogress" default="100" value="100">- Veg Feeding Progress <span class="value">100</span>%</div>
+                    <div id="feedingspeed" default="100" value="100">Feeding Speed <span class="value">100</span>%</div>
+                    <div id="feedingdistance" default="1" value="1">Feeding Distance <span class="value">1</span></div>
+
+                    <h2>Utility</h2>
+                    <div id="terrainpenaltyred" default="0" value="0">Terrain Penalty Red. <span class="value">0</span>%</div>
+                    <div id="senses" default="100" value="100">Senses <span class="value">100</span>%</div>
+                    <div id="effectsduration" default="100" value="100">Effects Duration <span class="value">100</span>%</div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div>
+                <h2>Mutually exclusive:</h2>
+                <div>Shell <> Carapace</div>
+                <div>Vegan <> Carnivore/Piscivore/Carrion</div>
+                <div>Scales <> Fur <> Exoskeleton</div>
+                <div>Tentacles <> Arms/Legs</div>
+                <div>Slithery <> Legs</div>
+            </div>
+
+            <div>
+                <h2>Unlocks:</h2>
+                <div>Carnivore 1/Herbivore 1/Piscivore 1 (all 3) > Omnivore</div>
+                <div>Herbivore 3 > Vegan</div>
+                <div>Cortex 3 > Synapse</div>
+                <div>Legs 3(?) > More Legs</div>
+            </div>
+        </div>
+    </body>
+</html>
