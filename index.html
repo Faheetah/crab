@@ -81,7 +81,7 @@
 
         <script type="text/javascript">
             let skills = {
-                "agile": {minRarity: 0, maxLevel: 5, stats: [{attackmovementpenalty: [10,20,30,40,50], dodge: [5,10,15,20,25]}, {attackmovementpenalty: [12,25,37,50,62], dodge: [6,12,18,25,32]}, {attackmovementpenalty: [14,30,45,60,75], dodge: [7,15,22,30,38]}, {attackmovementpenalty: [17,35,52,70,90], dodge: [6,17,26,35,45]}]},
+                "agile": {minRarity: 0, maxLevel: 5, stats: [{attackmovementpenalty: [-10,-20,-30,-40,-50], dodge: [5,10,15,20,25]}, {attackmovementpenalty: [-12,-25,-37,-50,-62], dodge: [6,12,18,25,32]}, {attackmovementpenalty: [-14,-30,-45,-60,-75], dodge: [7,15,22,30,38]}, {attackmovementpenalty: [-17,-35,-52,-70,-90], dodge: [6,17,26,35,45]}]},
                 "alpha": {minRarity: 1, maxLevel: 3, stats: [{social: [1,2,3], size: [7,15,23]}, {social: [1.2,2.5,3.8], size: [8,16,25]}, {social: [1.5,3,4.5], size: [10,20,30]}]},
                 "antennae": {minRarity: 1, maxLevel: 5, stats: [{social: [1.5,3,4.5,6,7.5], senses: [15,30,45,60,75]}, {social: [1.7,3.5,5.2,7,8.7], senses: [18,36,55,73,90]}, {social: [2,4,6,8,10], senses: [23,45,68,90,110]}]},
                 "arms": {minRarity: 3, maxLevel: 3, branching: true, stats: [{feedingdistance: [2,4,6], ability: [2.5,5,7.5]}]},
@@ -105,10 +105,10 @@
                 "cheek pouch": {minRarity: 1, maxLevel: 3, stats: [{feedingdistance: [1,2,3]}, {feedingdistance: [2,3,4]}, {feedingdistance: [3,4,5]}]},
                 "cortex": {minRarity: 0, maxLevel: 5, stats: [{ability: [2,4,6,8,10]}, {ability: [2.3,4.5,7,9.5,11.5]}, {ability: [2.7,5.5,8,11,13.5]}, {ability: [3.3,6.6,10,13,16]}]},
                 "dexterous": {minRarity: 0, maxLevel: 5, stats: [
-                    {attackmovementpenalty: [10,20,30,40,50], cooldowns: [5,10,15,20,25]},
-                    {attackmovementpenalty: [12,24,35,50,65], cooldowns: [6,12,18,25,32]},
-                    {attackmovementpenalty: [14,30,45,60,75], cooldowns: [7,15,22,30,38]}, // not sure on attackmovementpenalty
-                    {attackmovementpenalty: [17,35,52,70,90], cooldowns: [8,17,26,35,45]},
+                    {attackmovementpenalty: [-10,-20,-30,-40,-50], cooldowns: [-5,-10,-15,-20,-25]},
+                    {attackmovementpenalty: [-12,-24,-35,-50,-65], cooldowns: [-6,-12,-18,-25,-32]},
+                    {attackmovementpenalty: [-14,-30,-45,-60,-75], cooldowns: [-7,-15,-22,-30,-38]}, // not sure on attackmovementpenalty
+                    {attackmovementpenalty: [-17,-35,-52,-70,-90], cooldowns: [-8,-17,-26,-35,-45]},
                 ]},
                 "elusive": {minRarity: 0, maxLevel: 3, stats: [
                     {size: [-10,-20,-30], dodge: [8,16,25]},
