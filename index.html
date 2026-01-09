@@ -310,7 +310,6 @@
                 statException = statExceptions[stat] || {}
                 currentValue = parseFloat(elem.getAttribute("value")) + value
                 defaultValue = parseFloat(elem.getAttribute("default"))
-                console.log(statException)
 
                 if ((currentValue) < statException.min) {
                     elem.setAttribute("value", statException.min)
