@@ -314,14 +314,15 @@
                 currentValue = parseFloat(elem.getAttribute("value")) + value
                 defaultValue = parseFloat(elem.getAttribute("default"))
 
+                elem.setAttribute("value", currentValue)
+
                 if ((currentValue) < statException.min) {
-                    elem.setAttribute("value", statException.min)
+                    elem.querySelector("span.value").textContent = statException.min
                 } else if ((currentValue) > statException.max) {
-                    elem.setAttribute("value", statException.max)
+                    elem.querySelector("span.value").textContent = statException.max
                 } else {
-                    elem.setAttribute("value", currentValue)
+                    elem.querySelector("span.value").textContent = Math.floor(elem.getAttribute("value") * 10) / 10
                 }
-                elem.querySelector("span.value").textContent = Math.floor(elem.getAttribute("value") * 10) / 10
 
                 if ((statException.inverted && currentValue > defaultValue) || (!statException.inverted && currentValue < defaultValue)) {
                     elem.querySelector("span.value").style.color = "#FF0000"
