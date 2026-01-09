@@ -229,9 +229,9 @@
                     {hp: [16,32,48], heatresistance: [23,45,68], coldresistance: [23,45,68]},
                 ]},
                 "synapse": {minRarity: 1, maxLevel: 3, stats: [
-                    {cooldowns: [10,20,30]},
-                    {cooldowns: [12,25,38]},
-                    {cooldowns: [15,30,45]},
+                    {cooldowns: [-10,-20,-30]},
+                    {cooldowns: [-12,-25,-38]},
+                    {cooldowns: [-15,-30,-45]},
                 ]},
                 "tail": {minRarity: 0, maxLevel: 5, stats: [
                     {social: [1.5,3,4.5,6,7.5], ability: [1,2,3,4,5]},
@@ -242,6 +242,13 @@
                 "tentacles": {minRarity: 3, maxLevel: 5, branching: true, stats: [{speed: [0.75,1.25,1.75,2.25,2.75], ability: [2,4,6,8,10]}]},
                 "vegan": {minRarity: 2, maxLevel: 3, stats: [{vegfeedingprogress: [75,150,225]}, {vegfeedingprogress: [100,200,300]}]},
                 "wings": {minRarity: 3, maxLevel: 1, branching: true, stats: [{terrainpenaltyred: [80]}]},
+            }
+
+            let statExceptions = {
+                "dodge": {max: 75},
+                "cooldowns": {min: 25, inverted: true},
+                "attackmovementpenalty": {min: 20, inverted: true},
+                "size": {min: 40}
             }
 
             let decrementStats = function(e) {
@@ -300,18 +307,25 @@
 
             let changeStat = function(stat, value) {
                 elem = document.getElementById(stat)
-                elem.setAttribute("value", parseFloat(elem.getAttribute("value")) + value)
+                statException = statExceptions[stat] || {}
+                currentValue = parseFloat(elem.getAttribute("value")) + value
+                defaultValue = parseFloat(elem.getAttribute("default"))
+                console.log(statException)
+
+                if ((currentValue) < statException.min) {
+                    elem.setAttribute("value", statException.min)
+                } else if ((currentValue) > statException.max) {
+                    elem.setAttribute("value", statException.max)
+                } else {
+                    elem.setAttribute("value", currentValue)
+                }
                 elem.querySelector("span.value").textContent = Math.floor(elem.getAttribute("value") * 10) / 10
 
-                if (parseFloat(elem.getAttribute("value")) < parseFloat(elem.getAttribute("default"))) {
+                if ((statException.inverted && currentValue > defaultValue) || (!statException.inverted && currentValue < defaultValue)) {
                     elem.querySelector("span.value").style.color = "#FF0000"
-                }
-
-                if (parseFloat(elem.getAttribute("value")) > parseFloat(elem.getAttribute("default"))) {
+                } else if ((statException.inverted && currentValue < defaultValue) || (!statException.inverted && currentValue > defaultValue)) {
                     elem.querySelector("span.value").style.color = "#00FF00"
-                }
-
-                if (parseFloat(elem.getAttribute("value")) == parseFloat(elem.getAttribute("default"))) {
+                } else {
                     elem.querySelector("span.value").style.color = "#EEEEEE"
                 }
             }
